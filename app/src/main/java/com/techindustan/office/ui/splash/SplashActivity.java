@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.techindustan.office.R;
 import com.techindustan.office.ui.employee.EmployeeActivity;
 import com.techindustan.office.ui.login.LoginActivity;
+import com.techindustan.office.ui.nav_drawer.MainActivity;
 import com.techindustan.office.utils.Constants;
 import com.techindustan.office.utils.Utilities;
 
@@ -21,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (Utilities.getBooleanPref(SplashActivity.this, Constants.IS_LOGIN)) {
-                    startActivity(new Intent(SplashActivity.this, EmployeeActivity.class));
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                 } else {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));

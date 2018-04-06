@@ -35,10 +35,6 @@
         </service>
 
         <activity
-            android:name=".ui.employee.EmployeeActivity"
-            android:label="Employee"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".ui.message.MessageActivity"
             android:noHistory="true" />
         <activity
@@ -47,6 +43,11 @@
         <activity
             android:name=".ui.splash.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
         <activity
@@ -54,11 +55,6 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

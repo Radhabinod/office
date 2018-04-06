@@ -21,6 +21,7 @@ import com.techindustan.model.notification.Notification;
 import com.techindustan.office.R;
 import com.techindustan.office.network.ApiClient;
 import com.techindustan.office.network.ApiInterface;
+import com.techindustan.office.ui.nav_drawer.MainActivity;
 import com.techindustan.office.utils.Utilities;
 
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class MessageDialog extends Dialog {
     }
 
     void arrageVenueOrderByDesignation() {
-        String job_title = ((EmployeeActivity) context).getUserDetail().getJob_title().toLowerCase();
+        String job_title = ((MainActivity) context).getUserDetail().getJob_title().toLowerCase();
         String temp = vanues[0];
         if (job_title.contains("ceo") || job_title.contains("cto")) {
             vanues[0] = vanues[1];
@@ -108,13 +109,13 @@ public class MessageDialog extends Dialog {
     @OnClick(R.id.btnSendMessage)
     public void onViewClicked() {
         if (isValid()) {
-            String access_token = ((EmployeeActivity) context).getUserDetail().getAccess_token();
-            ((EmployeeActivity) context).showProgress();
+            String access_token = ((MainActivity) context).getUserDetail().getAccess_token();
+            ((MainActivity) context).showProgress();
             Call<Notification> loginCall = apiInterface.sendMessage(access_token, spVenue.getSelectedItem().toString(), etMessage.getText().toString(), spTime.getSelectedItem().toString(), employee.getId() + "");
             loginCall.enqueue(new Callback<Notification>() {
                 @Override
                 public void onResponse(Call<Notification> call, retrofit2.Response<Notification> response) {
-                    ((EmployeeActivity) context).hideProgress();
+                    ((MainActivity) context).hideProgress();
                     if (response.code() == 200) {
                         Notification notification = response.body();
                         if (notification.getStatus() == 200) {
@@ -132,7 +133,7 @@ public class MessageDialog extends Dialog {
 
                 @Override
                 public void onFailure(Call<Notification> call, Throwable t) {
-                    ((EmployeeActivity) context).hideProgress();
+                    ((MainActivity) context).hideProgress();
                 }
             });
         }

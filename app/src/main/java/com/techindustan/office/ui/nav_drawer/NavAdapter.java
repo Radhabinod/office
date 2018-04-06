@@ -30,16 +30,10 @@ public class NavAdapter extends BaseAdapter {
     public NavAdapter(Context mainActivity, List<String> names) {
         this.context = mainActivity;
         this.names = names;
-
-
-
         //loginFont = Typeface.createFromAsset(.getAssets(), "fonts/Lato-Regular.ttf");
-
-
-
-        icon.add(R.drawable.email);
-        icon.add(R.drawable.logout);
-        icon.add(R.drawable.skype);
+        icon.add(R.drawable.ic_dashboard_black);
+        icon.add(R.drawable.ic_view_list_black);
+        icon.add(R.drawable.ic_settings_black);
 
     }
 
@@ -63,7 +57,7 @@ public class NavAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.item_nav_item, null);
         title = (TextView) convertView.findViewById(R.id.textView5);
-    //    title.setTypeface(loginFont);
+        //    title.setTypeface(loginFont);
         title.setText(names.get(position));
         int selectedIndex = 0;
         ImageView icons = (ImageView) convertView.findViewById(R.id.imageView10);

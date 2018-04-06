@@ -9,17 +9,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -34,6 +39,7 @@ import com.techindustan.office.R;
 import com.techindustan.office.network.ApiClient;
 import com.techindustan.office.network.ApiInterface;
 import com.techindustan.office.ui.base.BaseActivity;
+import com.techindustan.office.ui.base.BaseFragment;
 import com.techindustan.office.ui.login.LoginActivity;
 import com.techindustan.office.utils.Constants;
 import com.techindustan.office.utils.Utilities;
@@ -52,7 +58,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.EmployeesInterface {
+public class EmployeeActivity extends BaseFragment implements EmployeeAdapter.EmployeesInterface {
 
     @BindView(R.id.rvEmployee)
     RecyclerView rvEmployee;
@@ -63,28 +69,29 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
     ApiInterface apiInterface;
     String tempNumber;
     int CALL_REQ_CODE = 100;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     GsonBuilder gsonBuilder;
     Gson gson;
     @BindView(R.id.searchView)
     SearchView searchView;
-    @BindView(R.id.swEnableNotification)
-    ImageView swEnableNotification;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_employee);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+        setHasOptionsMenu(true);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_employee, null);
+        //setContentView(R.layout.activity_employee);
+        ButterKnife.bind(this, v);
         gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         adapter = new EmployeeAdapter(this, employess);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         rvEmployee.setLayoutManager(mLayoutManager);
         rvEmployee.setAdapter(adapter);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -107,40 +114,9 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
                 return false;
             }
         });
-        swEnableNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Utilities.getBooleanPref(EmployeeActivity.this, Constants.IS_NOTIFICATION_ENABLE, true)) {
-                    new AlertDialog.Builder(EmployeeActivity.this).setMessage(R.string.disable_notif_alert_message).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            setNotifIcon(true);
-                            Utilities.updateBooleanPref(EmployeeActivity.this, Constants.IS_NOTIFICATION_ENABLE, true);
-                            dialogInterface.dismiss();
-                        }
-                    }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            setNotifIcon(false);
-                            Utilities.updateBooleanPref(EmployeeActivity.this, Constants.IS_NOTIFICATION_ENABLE, false);
-                        }
-                    }).show();
-                } else {
-                    setNotifIcon(true);
-
-                }
-            }
-        });
-
+        return v;
     }
 
-    void setNotifIcon(boolean isEnable) {
-        if (isEnable)
-            swEnableNotification.setImageResource(R.drawable.ic_notifications_none_black);
-        else
-            swEnableNotification.setImageResource(R.drawable.ic_notifications_off_black);
-
-    }
 
     private void search(String query) {
         query = query.toLowerCase();
@@ -157,16 +133,16 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_mainscreen, menu);
-        return super.onCreateOptionsMenu(menu);
-
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //inflater.inflate(R.menu.menu_mainscreen, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_logout) {
-            new AlertDialog.Builder(this).setMessage(R.string.logout_alert_message).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(getActivity()).setMessage(R.string.logout_alert_message).setNegativeButton("No", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
@@ -175,13 +151,15 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 
-                    String email = Utilities.getStringPref(EmployeeActivity.this, Constants.EMAIL);
-                    String password = Utilities.getStringPref(EmployeeActivity.this, Constants.PASSWORD);
-                    Utilities.clearAllPrefs(EmployeeActivity.this);
-                    Utilities.updateStringPref(EmployeeActivity.this, Constants.EMAIL, email);
-                    Utilities.updateStringPref(EmployeeActivity.this, Constants.PASSWORD, password);
-                    startActivity(new Intent(EmployeeActivity.this, LoginActivity.class));
-                    finish();
+                    String email = Utilities.getStringPref(getActivity(), Constants.EMAIL);
+                    String password = Utilities.getStringPref(getActivity(), Constants.PASSWORD);
+                    Utilities.clearAllPrefs(getActivity());
+                    Utilities.updateStringPref(getActivity(), Constants.EMAIL, email);
+                    Utilities.updateStringPref(getActivity(), Constants.PASSWORD, password);
+                    Intent it = new Intent(getActivity(), LoginActivity.class);
+                    it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(it);
+                    //finish();
                 }
             }).show();
         }
@@ -193,10 +171,10 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
         if (!isSwipe) {
             showProgress();
             //get employee data from local persistant data
-            if (!Utilities.getStringPref(EmployeeActivity.this, Constants.ALL_EMPLOYEE).isEmpty()) {
+            if (!Utilities.getStringPref(getActivity(), Constants.ALL_EMPLOYEE).isEmpty()) {
                 Type listType = new TypeToken<List<Response>>() {
                 }.getType();
-                List<Response> emp = gson.fromJson(Utilities.getStringPref(EmployeeActivity.this, Constants.ALL_EMPLOYEE), listType);
+                List<Response> emp = gson.fromJson(Utilities.getStringPref(getActivity(), Constants.ALL_EMPLOYEE), listType);
                 employess.clear();
                 employess.addAll(emp);
                 adapter.notifyDataSetChanged();
@@ -216,12 +194,12 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
                     //Log.e("res", employee.toString());
                     if (employee.getResponse() != null) {
                         employess.addAll(response.body().getResponse());
-                        Utilities.updateStringPref(EmployeeActivity.this, Constants.ALL_EMPLOYEE, gson.toJson(employess));
+                        Utilities.updateStringPref(getActivity(), Constants.ALL_EMPLOYEE, gson.toJson(employess));
                         adapter.notifyDataSetChanged();
                     }
                 } else {
                     try {
-                        Toast.makeText(EmployeeActivity.this, Utilities.getErrorMessage(response.errorBody().string()), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), Utilities.getErrorMessage(response.errorBody().string()), Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -243,7 +221,7 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
         tempNumber = number;
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse("tel:" + number));
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -257,7 +235,7 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
 
     @Override
     public void openMessageDialog(Response employee) {
-        MessageDialog messageDialog = new MessageDialog(EmployeeActivity.this, R.style.Theme_Dialog, employee);
+        MessageDialog messageDialog = new MessageDialog(getActivity(), R.style.Theme_Dialog, employee);
         messageDialog.show();
     }
 
@@ -268,7 +246,7 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 onCallClick(tempNumber);
             } else {
-                new AlertDialog.Builder(EmployeeActivity.this).setMessage(getString(R.string.app_name) + " needs the permission. Please allow.")
+                new AlertDialog.Builder(getActivity()).setMessage(getString(R.string.app_name) + " needs the permission. Please allow.")
                         .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -276,7 +254,7 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
                                     boolean showRationale = shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE);
                                     if (!showRationale) {
                                         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
                                         intent.setData(uri);
                                         startActivityForResult(intent, 10);
                                     } else {
@@ -295,36 +273,5 @@ public class EmployeeActivity extends BaseActivity implements EmployeeAdapter.Em
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkOfficeTime();
-    }
-
-    void checkOfficeTime() {
-        Calendar calendar = Calendar.getInstance();
-        Date current = calendar.getTime();
-
-        Calendar calStart = Calendar.getInstance();
-        calStart.set(Calendar.HOUR_OF_DAY, 8);
-        calStart.set(Calendar.MINUTE, 30);
-        calStart.set(Calendar.SECOND, 0);
-        Date timeStart = calStart.getTime();
-
-        Calendar calEnd = Calendar.getInstance();
-        calEnd.set(Calendar.HOUR_OF_DAY, 20);
-        calEnd.set(Calendar.MINUTE, 30);
-        calEnd.set(Calendar.SECOND, 0);
-        Date timeEnd = calEnd.getTime();
-
-        Log.e("time", "start:" + timeStart + " end:" + timeEnd);
-        if (current.after(calStart.getTime()) && current.before(calEnd.getTime())) {
-            Log.e("between", "true");
-            setNotifIcon(Utilities.getBooleanPref(EmployeeActivity.this, Constants.IS_NOTIFICATION_ENABLE, true));
-        } else {
-            setNotifIcon(false);
-        }
-
-    }
 
 }

@@ -8,6 +8,11 @@ import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.techindustan.model.login.Response;
+import com.techindustan.office.utils.Constants;
+import com.techindustan.office.utils.Utilities;
 import com.techindustan.office.utils.ui.DialogUtils;
 
 /**
@@ -16,6 +21,10 @@ import com.techindustan.office.utils.ui.DialogUtils;
 public class BaseFragment extends Fragment implements BaseView {
 
     private ProgressDialog progressDialog;
+    Response userdetail = null;
+    Gson gson;
+    GsonBuilder builder;
+
     @Override
     public void showProgress() {
         progressDialog = DialogUtils.showLoadingDialog(getActivity());
@@ -44,6 +53,15 @@ public class BaseFragment extends Fragment implements BaseView {
     public boolean hasPermission(String permission) {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
                 getActivity().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public Response getUserDetail() {
+        if (userdetail == null) {
+            builder = new GsonBuilder();
+            gson = builder.create();
+            userdetail = gson.fromJson(Utilities.getStringPref(getActivity(), Constants.USER_DETAILS), Response.class);
+        }
+        return userdetail;
     }
 
 

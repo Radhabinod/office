@@ -13,6 +13,10 @@ public class Constants {
     public static final String IS_NOTIFICATION_ENABLE = "is_notif_enable";
     public static final String EMAIL = "user_email";
     public static final String PASSWORD = "user_password";
+    public static final Integer START_OFFICE_HR=8;
+    public static final Integer START_OFFICE_MIN=30;
+    public static final Integer END_OFFICE_HR=20;
+    public static final Integer END_OFFICE_MIN= 30;
 
     public static String SampleData = "{\n" +
             " \"all\":[ {\n" +

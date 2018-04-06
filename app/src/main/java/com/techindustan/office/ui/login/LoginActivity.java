@@ -24,6 +24,7 @@ import com.techindustan.office.network.ApiInterface;
 import com.techindustan.office.ui.ForgotPasswordActivity;
 import com.techindustan.office.ui.base.BaseActivity;
 import com.techindustan.office.ui.employee.EmployeeActivity;
+import com.techindustan.office.ui.nav_drawer.MainActivity;
 import com.techindustan.office.utils.Constants;
 import com.techindustan.office.utils.Utilities;
 
@@ -93,7 +94,7 @@ public class LoginActivity extends BaseActivity implements LoginView {
         Utilities.updateStringPref(LoginActivity.this, Constants.EMAIL, etEmail.getText().toString());
         Utilities.updateStringPref(LoginActivity.this, Constants.PASSWORD, etPassword.getText().toString());
         Utilities.updateStringPref(LoginActivity.this, Constants.USER_DETAILS, gson.toJson(response));
-        startActivity(new Intent(LoginActivity.this, EmployeeActivity.class));
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
     }
 

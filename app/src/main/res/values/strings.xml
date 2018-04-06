@@ -26,4 +26,12 @@
     <string name="dashboard">Dashboard</string>
     <string name="employ">Employee</string>
     <string name="section">Section</string>
+    <string name="notification_toogle">Notification toogle</string>
+    <string name="all_employee">All Employee</string>
+    <string name="settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="logout">Logout</string>
+
 </resources>

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -42,11 +43,12 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
     List<Response> temp;
 
 
-    public EmployeeAdapter(Context context, List<Response> employess) {
+    public EmployeeAdapter(Fragment f, List<Response> employess) {
+        context = f.getContext();
         this.employees = employess;
         this.temp = employess;
         this.context = context;
-        employeesInterface = (EmployeesInterface) context;
+        employeesInterface = (EmployeesInterface) f;
     }
 
     @NonNull

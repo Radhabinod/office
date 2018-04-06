@@ -20,12 +20,10 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
 
-    >
 
-        <include layout="@layout/item_drawer"
+        >
 
-
-            ></include>
+        <include layout="@layout/item_drawer"></include>
 
 
     </android.support.design.widget.NavigationView>
