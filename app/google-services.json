@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "943381976341",
+    "firebase_url": "https://office-app-c1734.firebaseio.com",
+    "project_id": "office-app-c1734",
+    "storage_bucket": "office-app-c1734.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:943381976341:android:d6e0aa56b88dddab",
+        "android_client_info": {
+          "package_name": "com.techindustan.office"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "943381976341-0lbaeabbghk7go7ag73ap2k0sevnv7nn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.techindustan.office",
+            "certificate_hash": "ea4ccb4da3c1e98db7f10542fc6a763cbd2766c3"
+          }
+        },
+        {
+          "client_id": "943381976341-fh55b2vvjrurgrs6oubin4oiilirsff3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQb-4uce750VKLDF5yHT6sBbUMujZQgGQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "943381976341-fh55b2vvjrurgrs6oubin4oiilirsff3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
